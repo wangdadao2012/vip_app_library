@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<litepal>
+    <dbname value="database"/>
+    <version value="6" />
+    <list>
+        <mapping class="www.comradesoftware.vip.db.DataDownload"/>
+        <mapping class="www.comradesoftware.vip.db.PageConfig"/>
+        <mapping class="www.comradesoftware.vip.db.SystemSetting"/>
+        <mapping class="www.comradesoftware.vip.db.GlobalConfig"/>
+        <mapping class="www.comradesoftware.vip.db.HtmlTags"/>
+        <mapping class="www.comradesoftware.vip.db.Page"/>
+        <mapping class="www.comradesoftware.vip.db.TabBar"/>
+        <mapping class="www.comradesoftware.vip.db.TabList"/>
+    </list>
+</litepal>

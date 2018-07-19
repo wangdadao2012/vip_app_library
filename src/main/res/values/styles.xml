@@ -1,0 +1,50 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorApp</item>
+        <item name="colorPrimaryDark">@color/colorAppDark</item>
+        <item name="colorAccent">@color/colorAppAccent</item>
+    </style>
+
+    <!--全屏style-->
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="AppTheme.Full" parent="AppTheme.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <!--启动app有背景图-->
+    <style name="AppTheme.Splash_bg" parent="AppTheme.Full">
+        <item name="android:windowBackground">@drawable/ic_beautiful</item>
+    </style>
+
+    <!--启动app实现透明化,其中 android:windowIsTranslucent 为关键，将其设置为 true。-->
+    <style name="AppTheme.Splash_translucent" parent="AppTheme.Full">
+        <!--背景透明-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <!--窗口透明-->
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <!-- 自定义Dialog -->
+    <style name="Custom_Progress" parent="@android:style/Theme.Dialog">
+        <!-- 无边框 -->
+        <item name="android:windowFrame">@null</item>
+        <!-- 是否浮现在activity之上 -->
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:background">@android:color/transparent</item>
+        <!--无遮罩效果-->
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+</resources>

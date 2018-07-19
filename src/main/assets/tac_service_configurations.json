@@ -1,0 +1,30 @@
+{
+    "version": "1.0.0",
+    "warning": "请不要修改这个文件中的内容",
+    "project": {
+        "projectId": 101479
+    },
+    "application": {
+        "appId": 101382,
+        "packageId": "www.comradesoftware.cloudbarley"
+    },
+    "services": {
+        "analytics": {
+            "appKey": "Aqcloud101382"
+        },
+        "messaging": {
+            "appId": "2100292405",
+            "appKey": "AG3871IRDD6D"
+        },
+        "crash": {
+            "appId": "4d9fd83ba0"
+        },
+        "payment": {
+            "offerId": "TC101382"
+        },
+        "storage": {
+            "bucket": "tac-kangleiyun-st-1254425741",
+            "region": "ap-guangzhou"
+        }
+    }
+}

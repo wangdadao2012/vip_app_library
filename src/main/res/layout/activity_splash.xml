@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:wave="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <www.comradesoftware.vip.view.CircleImageView
+            xmlns:pp="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/imgLauncher"
+            pp:srcCompat="@drawable/logo_white"
+            pp:border_width="0dp"
+            android:layout_width="@dimen/img_size"
+            android:layout_height="@dimen/img_size"/>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <FrameLayout
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <www.comradesoftware.vip.view.WaveViewBySinCos
+                android:id="@+id/wave_sin"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                wave:waveAmplitude="16dp"
+                wave:waveColor="@color/colorApp"
+                wave:waveFillType="bottom"
+                wave:waveSpeed="4"
+                wave:waveStart="true"
+                wave:waveStartPeriod="1"
+                wave:waveType="sin" />
+
+            <www.comradesoftware.vip.view.WaveViewBySinCos
+                android:id="@+id/wave_sin2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                wave:waveAmplitude="16dp"
+                wave:waveColor="@color/colorAppDark"
+                wave:waveFillType="bottom"
+                wave:waveSpeed="4"
+                wave:waveStart="true"
+                wave:waveStartPeriod="0"
+                wave:waveType="sin" />
+
+        </FrameLayout>
+
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/tvProgressText"
+            android:background="@drawable/tag_normal_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:padding="@dimen/text_padding"
+            android:layout_centerHorizontal="true"
+            android:layout_above="@+id/progressBar"
+            android:textColor="@color/colorAppDark" />
+        <ProgressBar
+            android:visibility="gone"
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:progressDrawable="@drawable/progress_drawable"
+            android:max="100"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/view_margin"
+            android:layout_marginEnd="@dimen/view_margin"
+            android:layout_marginBottom="@dimen/activity_vertical_margin" />
+    </RelativeLayout>
+</LinearLayout>

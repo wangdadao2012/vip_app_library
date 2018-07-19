@@ -1,0 +1,46 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 27
+    defaultConfig {
+        minSdkVersion 19
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+android {
+    useLibrary 'org.apache.http.legacy'
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    // 腾讯信鸽推送messaging模块，增加这两行，其中 core 是所有其他模块的基础
+    implementation 'com.tencent.tac:tac-core:1.1.2'
+    implementation 'com.tencent.tac:tac-messaging:1.1.2'
+//    DSBridge for X5
+    implementation 'com.github.wendux:DSBridge-Android:master-SNAPSHOT'
+
+    implementation('com.zhousf.lib:okhttp3:2.9.5.2') {
+        exclude(module: 'gson')
+        exclude group: 'com.android.support'
+    }
+//    api 'de.hdodenhof:circleimageview:2.2.0'
+}
