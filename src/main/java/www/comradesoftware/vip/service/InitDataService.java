@@ -201,14 +201,12 @@ public class InitDataService extends Service {
 //          获得要编辑的html文件的路径
             String filePathName=FileUtils.ACUDATA_PATH(this)+"/page/"+launchPage.toLowerCase()+"/index.htm";
 //          先读取到html文件的全部内容
-            String htmlContent=getHtmlContent(filePathName);
-//          转换数据为StringBuilder，为写入数据作准备
-            StringBuilder stringBuilder=new StringBuilder(htmlContent);
+            StringBuilder htmlContent=getHtmlContent(filePathName);
 //            在倒数第七个字符写入刚拼接的js和css内容，也就是<\html>之前
-            stringBuilder.insert(stringBuilder.length()-7,tagSB.toString());
+            htmlContent.insert(htmlContent.length()-7,tagSB.toString());
 //            写入编辑好的内容
             FileOutputStream fos = new FileOutputStream (filePathName) ;
-            fos.write(stringBuilder.toString().getBytes()) ;
+            fos.write(htmlContent.toString().getBytes()) ;
             fos.close ();
         } catch (JSONException | IOException e) {
             e.printStackTrace();
@@ -216,14 +214,15 @@ public class InitDataService extends Service {
         }
     }
 
-    private String getHtmlContent(String filePathName) throws IOException {
+    private StringBuilder getHtmlContent(String filePathName) throws IOException {
         FileInputStream fis = new FileInputStream(filePathName);
         int length = fis.available();
         byte [] buffer = new byte[length];
         fis.read(buffer);
         String res = EncodingUtils.getString(buffer, "UTF-8");
+
         fis.close();
-        return res;
+        return new StringBuilder(res);
     }
 
     //client 可以通过Binder获取Service实例

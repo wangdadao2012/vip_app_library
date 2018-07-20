@@ -112,10 +112,10 @@ public class MainActivity extends ActivityBase implements MyNavigationView.OnTab
     }
 
     public static void startMainActivity(Activity activity) {
-//        Intent intent = new Intent(activity, MainActivity.class);
-//        activity.startActivity(intent);
-//        activity.finish();
-//        activity.overridePendingTransition(R.anim.stand,R.anim.splash);
+        Intent intent = new Intent(activity, MainActivity.class);
+        activity.startActivity(intent);
+        activity.finish();
+        activity.overridePendingTransition(R.anim.stand,R.anim.splash);
     }
 
     @Override
