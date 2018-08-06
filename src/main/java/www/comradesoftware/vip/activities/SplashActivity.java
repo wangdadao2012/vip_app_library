@@ -18,14 +18,14 @@ import www.comradesoftware.vip.service.InitDataService;
 import www.comradesoftware.vip.view.CircleImageView;
 
 //启动页
-public class SplashActivity extends ActivityBase{
-    private final String TAG ="SplashActivity";
+public class SplashActivity extends BaseActivity {
+    private final String TAG = "SplashActivity";
     private CircleImageView imgLauncher;
     private InitDataReceiver mInitDataReceiver;
     public ProgressBar progressBar;
     public TextView tvProgressText;
 
-    private boolean isBind=false;
+    private boolean isBind = false;
 
     private ServiceConnection conn = new ServiceConnection() {
         //连接回调
@@ -37,6 +37,7 @@ public class SplashActivity extends ActivityBase{
             service.installDefaultData();
             service.setActivity(SplashActivity.this);
         }
+
         //断开连接回调
         @Override
         public void onServiceDisconnected(ComponentName name) {
@@ -55,17 +56,23 @@ public class SplashActivity extends ActivityBase{
 
     //接收InitService处理数据进度的广播，更新UI
     private void receiveInitDataBroadcast() {
-        mInitDataReceiver=new InitDataReceiver(this);
+        mInitDataReceiver = new InitDataReceiver(this);
         mInitDataReceiver.setOnInitDataReceiverListener(new InitDataReceiver.OnInitDataReceiverListener() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                tvProgressText.setVisibility(View.VISIBLE);
-                progressBar.setVisibility(View.VISIBLE);
-                int progress=intent.getIntExtra("progress",0);
-                String text=intent.getStringExtra("content");
-                tvProgressText.setText(text+String.valueOf(progress)+"%");
-//                tvProgressText.setText("loading...");
-                progressBar.setProgress(progress);
+                String content = intent.getStringExtra("content");
+                switch (content) {
+                    case "START_ACTIVITY":
+                        MainActivity.startMainActivity(SplashActivity.this);
+                        break;
+                    default:
+                        tvProgressText.setVisibility(View.VISIBLE);
+                        progressBar.setVisibility(View.VISIBLE);
+                        int progress = intent.getIntExtra("progress", 0);
+                        tvProgressText.setText(content + progress + "%");
+                        progressBar.setProgress(progress);
+                        break;
+                }
             }
         });
     }
@@ -77,9 +84,9 @@ public class SplashActivity extends ActivityBase{
     }
 
     private void initView() {
-        imgLauncher=findViewById(R.id.imgLauncher);
-        tvProgressText=findViewById(R.id.tvProgressText);
-        progressBar=findViewById(R.id.progressBar);
+        imgLauncher = findViewById(R.id.imgLauncher);
+        tvProgressText = findViewById(R.id.tvProgressText);
+        progressBar = findViewById(R.id.progressBar);
     }
 
 //    @Override

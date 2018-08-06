@@ -7,7 +7,6 @@
     <string name="ic_add">&#xE623;</string>
     <string name="ic_item">&#xE60B;</string>
     <string name="ic_detail">&#xE611;</string>
-
-
-
+    <string name="ic_back">&#xE61C;</string>
+    <string name="ic_close">&#xE617;</string>
 </resources>

@@ -1,6 +1,6 @@
 package www.comradesoftware.vip;
 
-import www.comradesoftware.vip.activities.ActivityBase;
+import www.comradesoftware.vip.activities.BaseActivity;
 import www.comradesoftware.vip.activities.MyApplication;
 import www.comradesoftware.vip.i.ISetting;
 import www.comradesoftware.vip.utils.https.LogEx;
@@ -30,7 +30,7 @@ public class Global {
     public static String UserNo = "";
     public static String UniqueID = "";
 
-    public static ActivityBase currentCtx = null;
+    public static BaseActivity currentCtx = null;
     public static Boolean Inited = false;
 
     public static String AppVer = "";

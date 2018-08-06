@@ -3,4 +3,5 @@
     <color name="colorAppDark">#0062b6</color>
     <color name="colorApp">#679fcc</color>
     <color name="colorAppAccent">#FF4081</color>
+    <color name="colorAppText">#434343</color>
 </resources>

@@ -1,132 +1,87 @@
 package www.comradesoftware.vip.activities;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
-import android.webkit.WebChromeClient;
-import android.webkit.WebViewClient;
-import android.widget.TextView;
 
-import org.apache.http.util.EncodingUtils;
 import org.litepal.crud.DataSupport;
 
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.util.List;
 
-import wendu.dsbridge.DWebView;
 import www.comradesoftware.vip.R;
-import www.comradesoftware.vip.db.GlobalConfig;
 import www.comradesoftware.vip.db.PageConfig;
 import www.comradesoftware.vip.db.TabBar;
-import www.comradesoftware.vip.utils.FileUtils;
-import www.comradesoftware.vip.utils.ToastUtil;
+import www.comradesoftware.vip.db.TabList;
+import www.comradesoftware.vip.utils.ApkInfoUtil;
+import www.comradesoftware.vip.utils.LogUtil;
 import www.comradesoftware.vip.view.MyNavigationView;
+import www.comradesoftware.vip.view.MyWebViews;
 
 //首页
-public class MainActivity extends ActivityBase implements MyNavigationView.OnTabClickListener {
+public class MainActivity extends BaseActivity implements MyNavigationView.OnTabClickListener {
 
     private MyNavigationView mNavigationView;
-    private DWebView mWbvHome;
-    private DWebView mWbvUser;
-
-    private final String TAG="MainActivity";
+    private MyWebViews mMyWebViews;
+    private final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
+        LogUtil.e("MainActivity","JS:"+ApkInfoUtil.getSysInfo(this));
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
-    private void initView(){
-        mNavigationView =findViewById(R.id.navigation);
-        mNavigationView.addTab("首页",R.string.ic_home);
-        mNavigationView.addTab("我的",R.string.ic_user);
-        mNavigationView.setTypefacePath("fonts/app.ttf");
+    private void initView() {
+        mNavigationView = findViewById(R.id.navigation);
+        PageConfig pageConfig = DataSupport.findLast(PageConfig.class);
+        TabBar tabBar = DataSupport.findLast(TabBar.class);
+        List<TabList> tabList = DataSupport.findAll(TabList.class);
+
+        for (TabList tab : tabList) {
+            mNavigationView.addTab(tab.getText(), Integer.parseInt(tab.getIconXe()));
+        }
+        mNavigationView.setAssetsTypefacePath("fonts/app.ttf");
         mNavigationView.setScaleFromXY(0.8f);
         mNavigationView.create();
+
+        mNavigationView.setTabColor(pageConfig.getNavBarTextColor(), tabBar.getSelectColor());
+        mNavigationView.setTabBgColor(pageConfig.getNavBarBgColor(), pageConfig.getNavBarBgColor());
+        mNavigationView.setBackgroundColor(pageConfig.getNavBarBgColor());
         mNavigationView.setOnTabClickListener(this);
 
-        mWbvHome=findViewById(R.id.wbvHome);
-        mWbvUser=findViewById(R.id.wbvUser);
-
-        mWbvHome.setWebViewClient(new WebViewClient());
-        mWbvUser.setWebViewClient(new WebViewClient());
-
-        String htmlContent="about:blank";
-        String launchPage=DataSupport.findLast(GlobalConfig.class).getLaunchPage();
-        try {
-            htmlContent=getHtmlContent(launchPage);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        mWbvHome.getSettings().setJavaScriptEnabled(true);//设置js可用
-        mWbvUser.getSettings().setJavaScriptEnabled(true);//设置js可用
-        switch (launchPage){
-            case "Main":
-                mNavigationView.setTabSelected(0,true);
-                mWbvHome.loadDataWithBaseURL("about:blank"
-                        , htmlContent
-                        , "text/html"
-                        , "UTF-8"
-                        ,"");
-                break;
-            case "My":
-                mNavigationView.setTabSelected(1,true);
-                mWbvUser.loadDataWithBaseURL("about:blank"
-                        , htmlContent
-                        , "text/html"
-                        , "UTF-8"
-                        ,"");
-                mWbvHome.reload();
-                break;
-        }
+        mMyWebViews = findViewById(R.id.myWebViews);
+        mNavigationView.setTabSelected(mMyWebViews.getLaunchIndex(), true);
     }
 
-    private String getHtmlContent(String launchPage) throws IOException {
-        //          获得要编辑的html文件的路径
-        String filePathName= FileUtils.ACUDATA_PATH(this)+"/page/"+launchPage.toLowerCase()+"/index.htm";
-        FileInputStream fis = new FileInputStream(filePathName);
-        int length = fis.available();
-        byte [] buffer = new byte[length];
-        fis.read(buffer);
-        String res = EncodingUtils.getString(buffer, "UTF-8");
-        fis.close();
-        return res;
-    }
+    /**
+     *
+     规则1：一个内部页面打开对应一个新的WebView
+     规则2：所有内部页面的页面跳转都跳转，内部页面要跳转必须使用 navigateTo 和  redirectTo 接口进行操作
 
-    private void showWebView(int index){
-        switch (index){
-            case 0:
-                mWbvHome.setVisibility(View.VISIBLE);
-                mWbvUser.setVisibility(View.GONE);
-                break;
-            case 1:
-                mWbvHome.setVisibility(View.GONE);
-                mWbvUser.setVisibility(View.VISIBLE);
-                break;
-        }
-    }
+     navigateTo接口：
+     只能跳到内部页，一个内部页面打开对应一个新的WebView，已存在的就显示，不存在就创建，加入队列
 
+     redirectTo 接口：
+     打开SubWebView第二层视图，二层视图包含标题栏，标题栏有个 关闭按钮 ， 后退按钮，标题，跳转都在当前webview完成
+
+     navigateBack接口：
+     如果页面是tab列表和preload列表的页面，则保持webview的生命，如果是preload页面既隐藏，返回显示上一个页面，如果是tab页面就不用做动作，因为伊已经是顶层
+
+     * @param activity
+     */
     public static void startMainActivity(Activity activity) {
         Intent intent = new Intent(activity, MainActivity.class);
+//        activity.overridePendingTransition(R.anim.stand,R.anim.splash);
         activity.startActivity(intent);
         activity.finish();
-        activity.overridePendingTransition(R.anim.stand,R.anim.splash);
     }
 
     @Override
     public void onTabClick(View v, int index) {
-        switch (index){
-            case 0:
-                showWebView(0);
-                break;
-            case 1:
-                showWebView(1);
-                break;
-        }
+        mMyWebViews.showView(index);
     }
 }

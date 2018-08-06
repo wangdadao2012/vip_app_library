@@ -7,11 +7,6 @@
 
     <dimen name="img_size">100dp</dimen>
 
-    <dimen name="text_size_small">10sp</dimen>
-    <dimen name="text_size_medium">14sp</dimen>
-    <dimen name="text_size_big">14sp</dimen>
-    <dimen name="text_size_huge">14sp</dimen>
-
     <dimen name="text_padding">8dp</dimen>
     <dimen name="text_margin">8dp</dimen>
 

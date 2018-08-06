@@ -27,8 +27,8 @@ import www.comradesoftware.vip.Global;
 import www.comradesoftware.vip.MyDialog.CustomProgressDialog;
 import www.comradesoftware.vip.R;
 
-import static www.comradesoftware.vip.activities.ActivityBase.Handler_What_CloseLoading;
-import static www.comradesoftware.vip.activities.ActivityBase.Handler_What_ShowLoading;
+import static www.comradesoftware.vip.activities.BaseActivity.Handler_What_CloseLoading;
+import static www.comradesoftware.vip.activities.BaseActivity.Handler_What_ShowLoading;
 
 /**
  * 网络访问辅助类

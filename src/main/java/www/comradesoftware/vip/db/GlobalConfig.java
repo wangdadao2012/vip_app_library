@@ -9,8 +9,17 @@ public class GlobalConfig extends DataSupport {
     private String Name;
     private String Value;
     private String version;
+    private String build;
     private String launchPage;
     private List<Page> pages;
+
+    public String getBuild() {
+        return build;
+    }
+
+    public void setBuild(String build) {
+        this.build = build;
+    }
 
     public String getVersion() {
         return version;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <litepal>
     <dbname value="database"/>
-    <version value="6" />
+    <version value="7" />
     <list>
         <mapping class="www.comradesoftware.vip.db.DataDownload"/>
         <mapping class="www.comradesoftware.vip.db.PageConfig"/>
