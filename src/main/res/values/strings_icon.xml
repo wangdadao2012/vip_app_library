@@ -9,4 +9,5 @@
     <string name="ic_detail">&#xE611;</string>
     <string name="ic_back">&#xE61C;</string>
     <string name="ic_close">&#xE617;</string>
+    <string name="ic_refresh">&#xE605;</string>
 </resources>

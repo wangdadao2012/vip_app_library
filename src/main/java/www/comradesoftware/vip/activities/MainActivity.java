@@ -5,18 +5,25 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.litepal.crud.DataSupport;
 
 import java.util.List;
 
 import www.comradesoftware.vip.R;
+import www.comradesoftware.vip.api.JsApi;
 import www.comradesoftware.vip.db.PageConfig;
 import www.comradesoftware.vip.db.TabBar;
 import www.comradesoftware.vip.db.TabList;
 import www.comradesoftware.vip.utils.ApkInfoUtil;
 import www.comradesoftware.vip.utils.LogUtil;
+import www.comradesoftware.vip.utils.ToastUtil;
 import www.comradesoftware.vip.view.MyNavigationView;
 import www.comradesoftware.vip.view.MyWebViews;
 
@@ -24,6 +31,7 @@ import www.comradesoftware.vip.view.MyWebViews;
 public class MainActivity extends BaseActivity implements MyNavigationView.OnTabClickListener {
 
     private MyNavigationView mNavigationView;
+    private Toolbar toolbar;
     private MyWebViews mMyWebViews;
     private final String TAG = "MainActivity";
 
@@ -32,11 +40,29 @@ public class MainActivity extends BaseActivity implements MyNavigationView.OnTab
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
-        LogUtil.e("MainActivity","JS:"+ApkInfoUtil.getSysInfo(this));
+        JsApi jsApi=new JsApi(this);
+        JSONObject jsonObject =new JSONObject();
+//          [NSString stringWithFormat:@"%@/WxMiniApp/api/%@/%@/%llu",[self getDomain],controller,method,ticks];
+//        http://app.1m1m.cc/WxMiniApp/api/ProductList/app_CategoryList/?Data={EntID:%22fbf628a1c1ca43a4bfd675a76773990d%22}
+        try {
+            jsonObject.put("Controller","ProductList");
+            jsonObject.put("Method","app_CategoryList");
+            jsonObject.put("Param","EntID");
+            jsonObject.put("Url","");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String url=jsApi.getUrl(jsonObject);
+        jsApi.getApiData(url);
     }
 
     private void initView() {
         mNavigationView = findViewById(R.id.navigation);
+        toolbar=findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        //菜单点击事件（注意需要在setSupportActionBar(toolbar)之后才有效果）
+        toolbar.setOnMenuItemClickListener(onMenuItemClick);
+
         PageConfig pageConfig = DataSupport.findLast(PageConfig.class);
         TabBar tabBar = DataSupport.findLast(TabBar.class);
         List<TabList> tabList = DataSupport.findAll(TabList.class);
@@ -57,6 +83,34 @@ public class MainActivity extends BaseActivity implements MyNavigationView.OnTab
         mNavigationView.setTabSelected(mMyWebViews.getLaunchIndex(), true);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // 绑定toobar跟menu
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    Toolbar.OnMenuItemClickListener onMenuItemClick=new Toolbar.OnMenuItemClickListener() {
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+            String msg = "";
+            int i = item.getItemId();
+            if (i == R.id.action_edit) {
+                msg += "Click edit";
+
+            } else if (i == R.id.action_share) {
+                msg += "Click share";
+
+            } else if (i == R.id.action_settings) {
+                msg += "Click setting";
+            }
+
+            if(!msg.equals("")) {
+                ToastUtil.showToast(MainActivity.this, msg);
+            }
+            return true;
+        }
+    };
     /**
      *
      规则1：一个内部页面打开对应一个新的WebView
@@ -65,13 +119,14 @@ public class MainActivity extends BaseActivity implements MyNavigationView.OnTab
      navigateTo接口：
      只能跳到内部页，一个内部页面打开对应一个新的WebView，已存在的就显示，不存在就创建，加入队列
 
-     redirectTo 接口：
-     打开SubWebView第二层视图，二层视图包含标题栏，标题栏有个 关闭按钮 ， 后退按钮，标题，跳转都在当前webview完成
-
      navigateBack接口：
      如果页面是tab列表和preload列表的页面，则保持webview的生命，如果是preload页面既隐藏，返回显示上一个页面，如果是tab页面就不用做动作，因为伊已经是顶层
 
-     * @param activity
+     build.json preload元素，但不存在
+     "preload":["Main","My","Login","Cart"]
+     进入【主界面】后，加载【启动页】后，后台线程根据preload创建对应webview并且隐藏
+
+     * @param activity activity
      */
     public static void startMainActivity(Activity activity) {
         Intent intent = new Intent(activity, MainActivity.class);

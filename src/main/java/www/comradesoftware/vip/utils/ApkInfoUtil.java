@@ -15,6 +15,7 @@ import org.litepal.crud.DataSupport;
 
 import java.lang.reflect.Method;
 
+import www.comradesoftware.vip.SettingSrc;
 import www.comradesoftware.vip.db.GlobalConfig;
 
 import static android.content.Context.TELEPHONY_SERVICE;
@@ -105,68 +106,32 @@ public class ApkInfoUtil {
         JSONObject object =new JSONObject();
         GlobalConfig globalConfig = DataSupport.findLast(GlobalConfig.class);
         DisplayMetrics dm = context.getResources().getDisplayMetrics();
+        SettingSrc settingSrc=new SettingSrc();
         int w_screen = dm.widthPixels;
         int h_screen = dm.heightPixels;
         try {
             object.put("CFBundleDisplayName",getAppName(context));
-            Log.e("ApkInfo","CFBundleDisplayName:"+getAppName(context));
-
             object.put("CFBundleIdentifier",context.getPackageName());
-            Log.e("ApkInfo","CFBundleIdentifier:"+context.getPackageName());
-
             object.put("CFBundleShortVersionString",getVerName(context));
-            Log.e("ApkInfo","CFBundleShortVersionString:"+getVerName(context));
-
             object.put("CFBundleVersion",getVersionCode(context));
-            Log.e("ApkInfo","CFBundleVersion:"+getVersionCode(context));
-
             object.put("CFBundleInfoDictionaryVersion",android.os.Build.VERSION.RELEASE);
-            Log.e("ApkInfo","CFBundleInfoDictionaryVersion:"+android.os.Build.VERSION.RELEASE);
-
             object.put("PackageVersion",globalConfig.getVersion());
-            Log.e("ApkInfo","PackageVersion:"+globalConfig.getVersion());
-
             object.put("PackageBuild",globalConfig.getBuild());
-            Log.e("ApkInfo","PackageBuild:"+globalConfig.getBuild());
-
             object.put("LaunchPage",globalConfig.getLaunchPage());
-            Log.e("ApkInfo","LaunchPage:"+globalConfig.getLaunchPage());
-
             object.put("RootPath",context.getPackageResourcePath());
-            Log.e("ApkInfo","RootPath:"+context.getPackageResourcePath());
-
             object.put("DocumentsPath",FileUtils.ACUDATA_PATH(context));
-            Log.e("ApkInfo","DocumentsPath:"+FileUtils.ACUDATA_PATH(context));
-
             object.put("UIDeviceWidth",w_screen);
-            Log.e("ApkInfo","UIDeviceWidth:"+w_screen);
-
             object.put("UIDeviceHeight",h_screen);
-            Log.e("ApkInfo","UIDeviceHeight:"+h_screen);
-
             object.put("isSIMULATOR",isSIMULATOR(context));
-            Log.e("ApkInfo","isSIMULATOR:"+isSIMULATOR(context));
-
             object.put("分辨率width",w_screen);
-            Log.e("ApkInfo","分辨率width:"+w_screen);
-
             object.put("分辨率height",h_screen);
-            Log.e("ApkInfo","分辨率height:"+h_screen);
-
             object.put("状态栏高度",getStatusBarHeigth(context));
-            Log.e("ApkInfo","状态栏高度:"+getStatusBarHeigth(context));
-
             object.put("系统","Android");
-            Log.e("ApkInfo","系统:"+"Android");
-
             object.put("版本",android.os.Build.VERSION.RELEASE);
-            Log.e("ApkInfo","版本:"+android.os.Build.VERSION.RELEASE);
-
             object.put("设备类型",android.os.Build.MODEL);
-            Log.e("ApkInfo","设备类型:"+android.os.Build.MODEL);
-
             object.put("序列号",getIMSI(context));
-            Log.e("ApkInfo","序列号:"+getIMSI(context));
+            object.put(" Domain",settingSrc.getDomain());
+            object.put(" AppID", settingSrc.getAppID());
         }catch (Exception e){
             e.getMessage();
         }

@@ -1,4 +1,4 @@
-package www.comradesoftware.vip.utils;
+package www.comradesoftware.vip.MyDialog;
 
 import android.app.Dialog;
 import android.content.Context;

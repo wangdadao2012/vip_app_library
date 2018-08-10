@@ -130,5 +130,4 @@ public class SplashActivity extends BaseActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         return keyCode == KeyEvent.KEYCODE_BACK || super.onKeyDown(keyCode, event);
     }
-
 }

@@ -10,4 +10,6 @@ public interface ISetting {
 	public String getDomain();
 
 	public boolean getDebug();
+
+	public String getToken();
 }

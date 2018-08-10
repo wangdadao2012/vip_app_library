@@ -5,13 +5,9 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.KeyEvent;
-import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
@@ -24,7 +20,7 @@ import android.widget.ProgressBar;
 
 import wendu.dsbridge.DWebView;
 import www.comradesoftware.vip.R;
-import www.comradesoftware.vip.utils.MyAlertDialog;
+import www.comradesoftware.vip.MyDialog.MyAlertDialog;
 import www.comradesoftware.vip.utils.ToastUtil;
 import www.comradesoftware.vip.view.MyToolbar;
 
@@ -42,6 +38,10 @@ public class SubWebActivity extends BaseActivity implements MyToolbar.OnItemClic
 
     @SuppressLint("SetJavaScriptEnabled")
     private void initView() {
+        mToolbar=findViewById(R.id.toolbar);
+        mToolbar.setOnItemClickListener(this);
+        progressBar=findViewById(R.id.progressBar);
+
         mDWebView =findViewById(R.id.dWebView);
         mDWebView.setWebChromeClient(new WebChromeClient(){
             @Override
@@ -55,7 +55,7 @@ public class SubWebActivity extends BaseActivity implements MyToolbar.OnItemClic
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 super.onReceivedError(view, request, error);
                 //用javascript隐藏系统定义的404页面信息
-                String data = "Page NO FOUND！";
+                String data = "页面未找到！";
                 view.loadUrl("javascript:document.body.innerHTML=\"" + data + "\"");
             }
 
@@ -65,61 +65,50 @@ public class SubWebActivity extends BaseActivity implements MyToolbar.OnItemClic
             }
         });
 
-        mDWebView.loadUrl("https://www.hao123.com/");
+        mDWebView.loadUrl(getUrl());
         WebSettings settings = mDWebView.getSettings();
         settings.setJavaScriptEnabled(true);//设置js可用(必要)
         settings.setAllowFileAccess(true);// 设置允许访问文件数据(必要)
         settings.setSupportZoom(true);//支持放大网页功能
         settings.setBuiltInZoomControls(true);//支持缩小网页
         settings.setSupportZoom(true);
+    }
 
-        mToolbar=findViewById(R.id.toolbar);
-        mToolbar.setOnItemClickListener(this);
-
-        progressBar=findViewById(R.id.progressBar);
-
+    private String getUrl(){
         Intent intent=getIntent();
         Bundle data = intent.getExtras();
         if (data != null) {
             String url = data.getString("URL");
-//            ToastUtil.showToast(this, url);
+            if (!TextUtils.isEmpty(url))
+                return url;
         }
+        return "https://www.baidu.com/";
     }
 
     private void showProgress(int progress){
         if(progress==100){
-            progressBar.setVisibility(View.GONE);//加载完网页进度条消失
+            progressBar.setVisibility(View.INVISIBLE);//加载完网页进度条消失
         }
         else{
             progressBar.setVisibility(View.VISIBLE);//开始加载网页时显示进度条
-//            progressBar.setProgress(progress);//设置进度值
+            progressBar.setProgress(progress);//设置进度值
         }
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (mDWebView.canGoBack())
-                mDWebView.goBack();
-            else
-                showDialog();
+            goBack();
             return true;
         }
         return super.onKeyDown(keyCode, event);
-    }
-    public static void startSubWebActivity(Activity activity,Bundle data) {
-        Intent intent = new Intent(activity, SubWebActivity.class);
-        intent.putExtras(data);
-//        activity.overridePendingTransition(R.anim.stand,R.anim.splash);
-        activity.startActivity(intent);
-        activity.finish();
     }
 
     @Override
     public void onItemClick(View v, int index) {
         switch (index){
             case 0:
-                mDWebView.goBack();
+                goBack();
                 break;
             case 1:
                 ToastUtil.showToast(this,"点击了标题");
@@ -128,12 +117,12 @@ public class SubWebActivity extends BaseActivity implements MyToolbar.OnItemClic
                 mDWebView.reload();
                 break;
             case 3:
-                showDialog();
+                finishDialog();
                 break;
         }
     }
 
-    private void showDialog() {
+    private void finishDialog() {
         Dialog dialog = MyAlertDialog.createConfirmDialog(this, "提示","要关闭本页面吗", "确定", "取消",
                 new DialogInterface.OnClickListener() {
                     @Override
@@ -142,5 +131,20 @@ public class SubWebActivity extends BaseActivity implements MyToolbar.OnItemClic
                     }
                 });
         dialog.show();
+    }
+
+    private void goBack(){
+        if (mDWebView.canGoBack())
+            mDWebView.goBack();
+        else
+            finishDialog();
+    }
+
+    public static void startSubWebActivity(Activity activity,Bundle data) {
+        Intent intent = new Intent(activity, SubWebActivity.class);
+        intent.putExtras(data);
+//        activity.overridePendingTransition(R.anim.stand,R.anim.splash);
+        activity.startActivity(intent);
+        activity.finish();
     }
 }

@@ -49,10 +49,7 @@ public class HttpHelp {
 
     public interface HttpResponseListener {
         void httpOnFailure(HttpInfo info) throws IOException;
-
         void httpOnSuccess(HttpInfo info) throws IOException;
-
-
     }
 
     public interface httpDownLoadFileListener{

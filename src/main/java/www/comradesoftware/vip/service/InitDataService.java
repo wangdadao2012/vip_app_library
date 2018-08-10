@@ -11,20 +11,20 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.okhttplib.HttpInfo;
 
-import www.comradesoftware.vip.activities.MainActivity;
 import www.comradesoftware.vip.activities.SplashActivity;
 import www.comradesoftware.vip.db.DataDownload;
 import www.comradesoftware.vip.db.GlobalConfig;
 import www.comradesoftware.vip.db.HtmlTags;
 import www.comradesoftware.vip.db.Page;
 import www.comradesoftware.vip.db.PageConfig;
+import www.comradesoftware.vip.db.Preload;
 import www.comradesoftware.vip.db.TabBar;
 import www.comradesoftware.vip.db.TabList;
 import www.comradesoftware.vip.receiver.InitDataReceiver;
 import www.comradesoftware.vip.utils.FileUtils;
 import www.comradesoftware.vip.utils.LogUtil;
 import www.comradesoftware.vip.utils.RandomUntil;
-import www.comradesoftware.vip.utils.SharedPreferencesTool;
+import www.comradesoftware.vip.utils.SharedTool;
 import www.comradesoftware.vip.utils.ToastUtil;
 import www.comradesoftware.vip.utils.https.ApiParam;
 import www.comradesoftware.vip.utils.https.HttpHelp;
@@ -73,7 +73,7 @@ public class InitDataService extends Service {
             FileUtils.createACUDATAPath(this);
         }
         //没有初始化数据
-        if (!SharedPreferencesTool.getString(this, "unZipDefaultData").equals("1")) {
+        if (!SharedTool.getString(this, "unZipDefaultData").equals("1")) {
             //解压初始数据包
             unZipDefaultData(FileUtils.ACUDATA_PATH(this));
             //解析ACUDATA文件夹下build.json文件
@@ -108,7 +108,7 @@ public class InitDataService extends Service {
             FileUtils.unZipInAsset(this, "www_base.zip", outputDir);
             Log.e("--解压默认数据包-->", "解压初始数据包成功");
             sendBroadcast("解压初始数据包", 100);
-            SharedPreferencesTool.putString(this, "unZipDefaultData", "1");
+            SharedTool.putString(this, "unZipDefaultData", "1");
         } catch (IOException e) {
             e.printStackTrace();
             sendBroadcast("解压初始数据包失败", 0);
@@ -135,6 +135,18 @@ public class InitDataService extends Service {
             for (Page page : pages) {
                 if (page != null)
                     page.save();
+            }
+
+            List<String> preloads = new Gson().fromJson(object.getString("preload")
+                    , new TypeToken<List<String>>() {
+                    }.getType());
+            DataSupport.deleteAll(Preload.class);
+            for (String preload : preloads) {
+                if (preload != null){
+                    Preload p=new Preload();
+                    p.setValue(preload);
+                    p.save();
+                }
             }
 
             DataSupport.deleteAll(GlobalConfig.class);
@@ -335,7 +347,7 @@ public class InitDataService extends Service {
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Log.e("--requestUpdateInfo-->", "解析失败:");
+                    LogUtil.e("--requestUpdateInfo-->", "解析失败:"+e.getMessage());
                     sendBroadcast("START_ACTIVITY", -1);
                 }
             }
@@ -361,7 +373,6 @@ public class InitDataService extends Service {
                     dataDownload.setDownloaded(1);
                     unZipUpData(info.getRetDetail());//解压更新包
                 } else {
-//                    dataDownload.setDownloaded(0);
                     defaultFail();
                     ToastUtil.showToast(activity, "下载出错，请退出应用后重试");
                 }
@@ -370,10 +381,6 @@ public class InitDataService extends Service {
 
             @Override
             public void httpOnFailure(String filePath, HttpInfo info) {
-//                DataDownload dataDownload=new DataDownload();
-//                dataDownload.setDownloaded(0);
-//                dataDownload.updateAll();
-//                sendBroadcast("下载更新包失败",0);
                 defaultFail();
             }
         });
@@ -390,7 +397,6 @@ public class InitDataService extends Service {
             @Override
             public void zipSuccess() {
                 LogUtil.e("解压更新包", "成功");
-
 //                把ACUDATA 目录改名为ACUDATAbak
                 FileUtils.rename(FileUtils.ACUDATA_PATH(InitDataService.this), FileUtils.getACUDATAbakPath(InitDataService.this));
 //                把临时目录改名为ACUDATA
@@ -398,6 +404,7 @@ public class InitDataService extends Service {
 
                 FileUtils.deleteFile(filePath);//删除更新包
                 FileUtils.deleteDirectory(FileUtils.getACUDATAbakPath(InitDataService.this)); //删除ACUDATAbak目录
+                FileUtils.deleteDirectory(FileUtils.getDownloadPath(InitDataService.this)); //删除Download目录
 
                 DataDownload dataDownload = new DataDownload();
                 dataDownload.setUpgrade(1);
@@ -428,7 +435,7 @@ public class InitDataService extends Service {
         FileUtils.deleteDirectory(FileUtils.ACUDATA_PATH(this));
         FileUtils.deleteDirectory(FileUtils.getDownloadPath(this));
         DataSupport.deleteAll(DataDownload.class);
-        SharedPreferencesTool.putString(this, "unZipDefaultData", "0");
+        SharedTool.putString(this, "unZipDefaultData", "0");
         sendBroadcast("START_ACTIVITY", -1);
 
     }

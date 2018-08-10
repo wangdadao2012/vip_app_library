@@ -1,10 +1,13 @@
 package www.comradesoftware.vip.view;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ClipDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -14,11 +17,9 @@ import java.util.List;
 import www.comradesoftware.vip.R;
 import www.comradesoftware.vip.utils.LogUtil;
 
-public class MyToolbar extends LinearLayout implements View.OnClickListener {
+public class MyToolbar extends RelativeLayout implements View.OnClickListener {
     private OnItemClickListener mListener;
     private Context context;
-    private IcTextView mStartText, mEndText;
-    private TextView mCenterText;
     private List<TextView> textViewList = new ArrayList<>();
 
     public MyToolbar(Context context, AttributeSet attrs) {
@@ -28,49 +29,61 @@ public class MyToolbar extends LinearLayout implements View.OnClickListener {
         if (MyToolbar.class.isAssignableFrom(context.getClass())) {
             this.mListener = (OnItemClickListener) context;
         }
-        //初始化一些属性
-        setMinimumHeight(45);
-        setBackgroundColor(getResources().getColor(android.R.color.white));
-        setOrientation(HORIZONTAL);
         addView();
     }
 
     private void addView() {
         for (int i = 0; i < 4; i++) {
-            int weight = 1;
             TextView textView =null;
             switch (i){
                 case 0:
-                    weight = 2;
                     textView = new IcTextView(context);
                     textView.setText(R.string.ic_back);
                     break;
                 case 1:
-                    weight = 4;
                     textView = new TextView(context);
                     textView.setText(R.string.app_name);
                     break;
                 case 2:
-                    weight = 1;
-                    textView = new TextView(context);
-                    textView.setText("刷新");
+                    textView = new IcTextView(context);
+                    textView.setText(R.string.ic_refresh);
                     break;
                 case 3:
-                    weight = 1;
                     textView = new IcTextView(context);
                     textView.setText(R.string.ic_close);
                     break;
             }
-            LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT, weight);
+
             textView.setId(View.generateViewId());
             textView.setGravity(Gravity.CENTER);
-            textView.setLayoutParams(layoutParams);
             textView.setTextColor(getResources().getColor(R.color.colorAppText));
             textView.setTextSize(16);
             textView.getPaint().setFakeBoldText(true);//加粗
             textView.setOnClickListener(this);
             addView(textView);
             textViewList.add(textView);
+        }
+
+        for (int i=0;i<4;i++){
+            RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.MATCH_PARENT);
+            switch (i){
+                case 0:
+                    params.setMarginStart(getResources().getDimensionPixelOffset(R.dimen.view_margin_l));
+                    break;
+                case 1:
+                    params.setMarginStart(getResources().getDimensionPixelOffset(R.dimen.view_margin_l));
+                    params.addRule(RelativeLayout.END_OF,textViewList.get(i-1).getId());
+                    break;
+                case 2:
+                    params.setMarginEnd(getResources().getDimensionPixelOffset(R.dimen.view_margin_su));
+                    params.addRule(RelativeLayout.START_OF,textViewList.get(3).getId());
+                    break;
+                case 3:
+                    params.setMarginEnd(getResources().getDimensionPixelOffset(R.dimen.view_margin_l));
+                    params.addRule(RelativeLayout.ALIGN_PARENT_END);
+                    break;
+            }
+            textViewList.get(i).setLayoutParams(params);
         }
     }
 

@@ -8,7 +8,6 @@
     <ImageView
         android:id="@+id/loadingIv"
         android:layout_width="wrap_content"
-        android:layout_centerInParent="true"
         android:scaleType="fitXY"
         android:layout_height="wrap_content"
         android:background="@drawable/loading_small" />
@@ -18,11 +17,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_below="@+id/loadingIv"
         android:layout_marginEnd="16dp"
         android:textColor="#dfdfdf"
         android:text="醒脑醒脑"
-        android:layout_centerHorizontal="true"
         android:textSize="16sp" />
 
 </LinearLayout>

@@ -11,7 +11,7 @@ import android.widget.TextView;;import www.comradesoftware.vip.R;
 
 /**
  * @author http://blog.csdn.net/finddreams
- * @Description:自定义对话框
+ * @Description: 自定义对话框
  */
 public class CustomProgressDialog extends ProgressDialog {
 

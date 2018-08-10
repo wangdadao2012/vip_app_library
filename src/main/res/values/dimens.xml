@@ -3,7 +3,10 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-    <dimen name="view_margin">8dp</dimen>
+    <dimen name="view_margin_s">4dp</dimen>
+    <dimen name="view_margin_m">8dp</dimen>
+    <dimen name="view_margin_l">16dp</dimen>
+    <dimen name="view_margin_su">32dp</dimen>
 
     <dimen name="img_size">100dp</dimen>
 

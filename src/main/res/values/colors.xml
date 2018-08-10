@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorAppDark">#0062b6</color>
-    <color name="colorApp">#679fcc</color>
-    <color name="colorAppAccent">#FF4081</color>
+    <color name="colorPrimaryDark">#0062b6</color>
+    <color name="colorPrimary">#679fcc</color>
+    <color name="colorAccent">#FF4081</color>
+
     <color name="colorAppText">#434343</color>
+    <color name="colorTranslucency">#36ffffff</color>
+    <color name="colorWhite">#ffffff</color>
 </resources>

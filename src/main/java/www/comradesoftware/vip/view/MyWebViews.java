@@ -65,7 +65,7 @@ public class MyWebViews extends FrameLayout {
             settings.setAllowFileAccess(true);// 设置允许访问文件数据(必要)
             settings.setSupportZoom(true);//支持放大网页功能
             settings.setBuiltInZoomControls(true);//支持缩小网页
-            webView.addJavascriptObject(new JsApi(context), "redirectTo");//添加API
+            webView.addJavascriptObject(new JsApi(context), null);//添加API
             DWebView.setWebContentsDebuggingEnabled(true);
 
             addView(webView);

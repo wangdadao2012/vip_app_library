@@ -14,7 +14,7 @@ public class Global {
     public static final String DirImg = "img/";
 
     public static String AppID = "app";
-    public static String AppName = "会员app";
+    public static String AppName = "ERP会员";
 
     public static String Domain = "http://app.1m1m.cc/";
     // "http://192.168.0.188:84/";
@@ -37,7 +37,6 @@ public class Global {
 
     public static void initApp(MyApplication ctx) {
         Application = ctx;
-
         try {
             Class aClass = Class.forName("www.comradesoftware.vip001.Setting");
             ISetting setting = (ISetting) aClass.newInstance();

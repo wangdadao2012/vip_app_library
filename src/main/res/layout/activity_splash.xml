@@ -38,7 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 wave:waveAmplitude="16dp"
-                wave:waveColor="@color/colorApp"
+                wave:waveColor="@color/colorPrimary"
                 wave:waveFillType="bottom"
                 wave:waveSpeed="4"
                 wave:waveStart="true"
@@ -50,7 +50,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 wave:waveAmplitude="16dp"
-                wave:waveColor="@color/colorAppDark"
+                wave:waveColor="@color/colorPrimaryDark"
                 wave:waveFillType="bottom"
                 wave:waveSpeed="4"
                 wave:waveStart="true"
@@ -74,7 +74,7 @@
             android:padding="@dimen/text_padding"
             android:layout_centerHorizontal="true"
             android:layout_above="@+id/progressBar"
-            android:textColor="@color/colorAppDark" />
+            android:textColor="@color/colorPrimaryDark" />
         <ProgressBar
             android:visibility="gone"
             android:id="@+id/progressBar"
@@ -84,8 +84,8 @@
             android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/view_margin"
-            android:layout_marginEnd="@dimen/view_margin"
+            android:layout_marginStart="@dimen/view_margin_m"
+            android:layout_marginEnd="@dimen/view_margin_m"
             android:layout_marginBottom="@dimen/activity_vertical_margin" />
     </RelativeLayout>
 </LinearLayout>

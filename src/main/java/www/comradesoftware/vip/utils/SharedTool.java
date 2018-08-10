@@ -11,7 +11,7 @@ import java.util.Map;
  * Created by Huan on 2017/3/16 0016.
  */
 
-public class SharedPreferencesTool {
+public class SharedTool {
 
     /**
      * 保存在手机里面的文件名

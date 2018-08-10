@@ -12,30 +12,31 @@
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
             <www.comradesoftware.vip.view.MyToolbar
                 android:id="@+id/toolbar"
+                app:layout_scrollFlags="scroll|enterAlways|snap"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@color/colorAppAccent"
-                app:layout_scrollFlags="scroll|enterAlways|snap" />
+                />
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:progressDrawable="@drawable/progress_drawable"
+                android:background="@color/colorWhite"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                />
+
         </android.support.design.widget.AppBarLayout>
+
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-            <wendu.dsbridge.DWebView
-                android:id="@+id/dWebView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                <wendu.dsbridge.DWebView
+                    android:id="@+id/dWebView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
         </android.support.v4.widget.NestedScrollView>
     </android.support.design.widget.CoordinatorLayout>
-
-    <ProgressBar
-        android:layout_centerInParent="true"
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 </RelativeLayout>
