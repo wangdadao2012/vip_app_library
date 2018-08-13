@@ -70,6 +70,7 @@ public class MainActivity extends BaseActivity implements MyNavigationView.OnTab
         for (TabList tab : tabList) {
             mNavigationView.addTab(tab.getText(), Integer.parseInt(tab.getIconXe()));
         }
+
         mNavigationView.setAssetsTypefacePath("fonts/app.ttf");
         mNavigationView.setScaleFromXY(0.8f);
         mNavigationView.create();
@@ -87,6 +88,7 @@ public class MainActivity extends BaseActivity implements MyNavigationView.OnTab
     public boolean onCreateOptionsMenu(Menu menu) {
         // 绑定toobar跟menu
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        getActionBar();
         return true;
     }
 
@@ -104,23 +106,19 @@ public class MainActivity extends BaseActivity implements MyNavigationView.OnTab
             } else if (i == R.id.action_settings) {
                 msg += "Click setting";
             }
-
             if(!msg.equals("")) {
                 ToastUtil.showToast(MainActivity.this, msg);
             }
             return true;
         }
     };
+
     /**
-     *
      规则1：一个内部页面打开对应一个新的WebView
      规则2：所有内部页面的页面跳转都跳转，内部页面要跳转必须使用 navigateTo 和  redirectTo 接口进行操作
 
      navigateTo接口：
      只能跳到内部页，一个内部页面打开对应一个新的WebView，已存在的就显示，不存在就创建，加入队列
-
-     navigateBack接口：
-     如果页面是tab列表和preload列表的页面，则保持webview的生命，如果是preload页面既隐藏，返回显示上一个页面，如果是tab页面就不用做动作，因为伊已经是顶层
 
      build.json preload元素，但不存在
      "preload":["Main","My","Login","Cart"]

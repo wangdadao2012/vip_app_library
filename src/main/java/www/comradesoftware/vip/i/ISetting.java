@@ -3,13 +3,13 @@ package www.comradesoftware.vip.i;
 
 public interface ISetting {
 
-	public String getAppID();
+	String getAppID();
 	
-	public String getAppName();
+	String getAppName();
 	
-	public String getDomain();
+	String getDomain();
 
-	public boolean getDebug();
+	boolean getDebug();
 
-	public String getToken();
+	String getToken();
 }
