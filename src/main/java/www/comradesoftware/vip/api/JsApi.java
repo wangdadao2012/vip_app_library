@@ -33,6 +33,7 @@ public class JsApi {
     public JsApi(Context context){
         this.context=context;
     }
+
     //同步
     @JavascriptInterface
     public String testSyn(Object msg)  {
@@ -44,8 +45,6 @@ public class JsApi {
     public void testAsyn(Object msg, CompletionHandler<String> handler){
         handler.complete(msg+" [ asyn call]");
     }
-
-
 
 
     /**

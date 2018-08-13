@@ -58,6 +58,7 @@ public class MainActivity extends BaseActivity implements MyNavigationView.OnTab
 
     private void initView() {
         mNavigationView = findViewById(R.id.navigation);
+        mMyWebViews = findViewById(R.id.myWebViews);
         toolbar=findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //菜单点击事件（注意需要在setSupportActionBar(toolbar)之后才有效果）
@@ -79,8 +80,6 @@ public class MainActivity extends BaseActivity implements MyNavigationView.OnTab
         mNavigationView.setTabBgColor(pageConfig.getNavBarBgColor(), pageConfig.getNavBarBgColor());
         mNavigationView.setBackgroundColor(pageConfig.getNavBarBgColor());
         mNavigationView.setOnTabClickListener(this);
-
-        mMyWebViews = findViewById(R.id.myWebViews);
         mNavigationView.setTabSelected(mMyWebViews.getLaunchIndex(), true);
     }
 
@@ -88,7 +87,6 @@ public class MainActivity extends BaseActivity implements MyNavigationView.OnTab
     public boolean onCreateOptionsMenu(Menu menu) {
         // 绑定toobar跟menu
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        getActionBar();
         return true;
     }
 
@@ -99,7 +97,6 @@ public class MainActivity extends BaseActivity implements MyNavigationView.OnTab
             int i = item.getItemId();
             if (i == R.id.action_edit) {
                 msg += "Click edit";
-
             } else if (i == R.id.action_share) {
                 msg += "Click share";
 
@@ -119,6 +116,11 @@ public class MainActivity extends BaseActivity implements MyNavigationView.OnTab
 
      navigateTo接口：
      只能跳到内部页，一个内部页面打开对应一个新的WebView，已存在的就显示，不存在就创建，加入队列
+     参数 { Page:"Main",Close:true }
+     Close跳转并关闭当前WebView(如果可以关闭的话)
+
+     navigateBack接口：
+     如果页面是tab列表和preload列表的页面，则保持webview的生命，如果是preload页面既隐藏，返回显示上一个页面，如果是tab页面就不用做动作，因为伊已经是顶层
 
      build.json preload元素，但不存在
      "preload":["Main","My","Login","Cart"]
