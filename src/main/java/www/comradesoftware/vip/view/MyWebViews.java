@@ -51,7 +51,7 @@ public class MyWebViews extends FrameLayout {
 
     //设置数量
     @SuppressLint("SetJavaScriptEnabled")
-    public void addWabView() {
+    private void addWabView() {
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
         List<TabList> tabs = DataSupport.findAll(TabList.class);
         int size = tabs.size();
@@ -70,7 +70,6 @@ public class MyWebViews extends FrameLayout {
 
             addView(webView);
             mWebViewList.add(webView);
-
 
 //           方式一：webview.loadUrl
 //           获得js和css的所在文件夹
