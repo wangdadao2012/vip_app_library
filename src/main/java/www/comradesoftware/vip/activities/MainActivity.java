@@ -2,9 +2,7 @@ package www.comradesoftware.vip.activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,11 +19,10 @@ import www.comradesoftware.vip.api.JsApi;
 import www.comradesoftware.vip.db.PageConfig;
 import www.comradesoftware.vip.db.TabBar;
 import www.comradesoftware.vip.db.TabList;
-import www.comradesoftware.vip.utils.ApkInfoUtil;
 import www.comradesoftware.vip.utils.LogUtil;
-import www.comradesoftware.vip.utils.ToastUtil;
 import www.comradesoftware.vip.view.MyNavigationView;
 import www.comradesoftware.vip.view.MyWebViews;
+import www.comradesoftware.vip.view.PreloadWbViewPage;
 
 //首页
 public class MainActivity extends BaseActivity implements MyNavigationView.OnTabClickListener {
@@ -33,6 +30,8 @@ public class MainActivity extends BaseActivity implements MyNavigationView.OnTab
     private MyNavigationView mNavigationView;
     private Toolbar toolbar;
     private MyWebViews mMyWebViews;
+    private PreloadWbViewPage mPreloadViewPage;
+
     private final String TAG = "MainActivity";
 
     @Override
@@ -40,26 +39,28 @@ public class MainActivity extends BaseActivity implements MyNavigationView.OnTab
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
-        JsApi jsApi=new JsApi(this);
-        JSONObject jsonObject =new JSONObject();
-//          [NSString stringWithFormat:@"%@/WxMiniApp/api/%@/%@/%llu",[self getDomain],controller,method,ticks];
-//        http://app.1m1m.cc/WxMiniApp/api/ProductList/app_CategoryList/?Data={EntID:%22fbf628a1c1ca43a4bfd675a76773990d%22}
-        try {
-            jsonObject.put("Controller","ProductList");
-            jsonObject.put("Method","app_CategoryList");
-            jsonObject.put("Param","EntID");
-            jsonObject.put("Url","");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        String url=jsApi.getUrl(jsonObject);
-        jsApi.getApiData(url);
+//        JsApi jsApi=new JsApi(this);
+//        JSONObject jsonObject =new JSONObject();
+////          [NSString stringWithFormat:@"%@/WxMiniApp/api/%@/%@/%llu",[self getDomain],controller,method,ticks];
+////        http://app.1m1m.cc/WxMiniApp/api/ProductList/app_CategoryList/?Data={EntID:%22fbf628a1c1ca43a4bfd675a76773990d%22}
+//        try {
+//            jsonObject.put("Controller","ProductList");
+//            jsonObject.put("Method","app_CategoryList");
+//            jsonObject.put("Param","EntID");
+//            jsonObject.put("Url","");
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        String url=jsApi.getUrl(jsonObject);
+//        jsApi.getApiData(url);
     }
 
     private void initView() {
         mNavigationView = findViewById(R.id.navigation);
         mMyWebViews = findViewById(R.id.myWebViews);
         toolbar=findViewById(R.id.toolbar);
+        mPreloadViewPage =findViewById(R.id.preloadViewPage);
+
         setSupportActionBar(toolbar);
         //菜单点击事件（注意需要在setSupportActionBar(toolbar)之后才有效果）
         toolbar.setOnMenuItemClickListener(onMenuItemClick);
@@ -68,17 +69,24 @@ public class MainActivity extends BaseActivity implements MyNavigationView.OnTab
         TabBar tabBar = DataSupport.findLast(TabBar.class);
         List<TabList> tabList = DataSupport.findAll(TabList.class);
 
+
+        int[] iconXe =new int[]{607,608,609};
+        int i=0;
         for (TabList tab : tabList) {
-            mNavigationView.addTab(tab.getText(), Integer.parseInt(tab.getIconXe()));
+            LogUtil.e("TabList",tab.getIconXe());
+
+            mNavigationView.addTab(tab.getText(),iconXe[i]);
+//            mNavigationView.addTab(tab.getText(),Integer.parseInt(tab.getIconXe()));
+            i++;
         }
 
         mNavigationView.setAssetsTypefacePath("fonts/app.ttf");
         mNavigationView.setScaleFromXY(0.8f);
         mNavigationView.create();
 
-        mNavigationView.setTabColor(pageConfig.getNavBarTextColor(), tabBar.getSelectColor());
-        mNavigationView.setTabBgColor(pageConfig.getNavBarBgColor(), pageConfig.getNavBarBgColor());
-        mNavigationView.setBackgroundColor(pageConfig.getNavBarBgColor());
+//        mNavigationView.setTabColor(pageConfig.getNavBarTextColor(), tabBar.getSelectColor());
+//        mNavigationView.setTabBgColor(pageConfig.getNavBarBgColor(), pageConfig.getNavBarBgColor());
+//        mNavigationView.setBackgroundColor(pageConfig.getNavBarBgColor());
         mNavigationView.setOnTabClickListener(this);
         mNavigationView.setTabSelected(mMyWebViews.getLaunchIndex(), true);
     }
@@ -93,39 +101,46 @@ public class MainActivity extends BaseActivity implements MyNavigationView.OnTab
     Toolbar.OnMenuItemClickListener onMenuItemClick=new Toolbar.OnMenuItemClickListener() {
         @Override
         public boolean onMenuItemClick(MenuItem item) {
-            String msg = "";
             int i = item.getItemId();
-            if (i == R.id.action_edit) {
-                msg += "Click edit";
-            } else if (i == R.id.action_share) {
-                msg += "Click share";
-
-            } else if (i == R.id.action_settings) {
-                msg += "Click setting";
+            if (i == R.id.action_menu0) {
+                mPreloadViewPage.setPreloadViewPageBack();
+            } else if (i == R.id.action_menu1) {
+                mPreloadViewPage.setPreloadViewPageTo("Main",false);
+            } else if (i == R.id.action_menu2) {
+                mPreloadViewPage. setPreloadViewPageTo("My",true);
             }
-            if(!msg.equals("")) {
-                ToastUtil.showToast(MainActivity.this, msg);
+            else if (i == R.id.action_menu3) {
+                mPreloadViewPage.setPreloadViewPageTo("Login",false);
+            }
+            else if (i == R.id.action_menu4) {
+                mPreloadViewPage.setPreloadViewPageTo("Cart",false);
+            }
+            else if (i == R.id.action_menu5) {
+                Bundle bundle=new Bundle();
+                bundle.putString("URL","javascript:document.body.innerHTML=\"" + "测试页面哦" + "\"");
+                SubWebActivity.startSubWebActivity(MainActivity.this,bundle);
             }
             return true;
         }
     };
 
+    @Override
+    public void onTabClick(View v, int index) {
+        mMyWebViews.showView(index);
+        mMyWebViews.setVisibility(View.VISIBLE);
+        mPreloadViewPage.setVisibility(View.GONE);
+    }
+
+    public void setPreloadViewPageTo(String page,boolean close){
+        mPreloadViewPage.setPreloadViewPageTo(page,close);
+    }
+
+    public void setMyWebViewsVisibility(int visibility){
+        mMyWebViews.setVisibility(visibility);
+    }
+
+
     /**
-     规则1：一个内部页面打开对应一个新的WebView
-     规则2：所有内部页面的页面跳转都跳转，内部页面要跳转必须使用 navigateTo 和  redirectTo 接口进行操作
-
-     navigateTo接口：
-     只能跳到内部页，一个内部页面打开对应一个新的WebView，已存在的就显示，不存在就创建，加入队列
-     参数 { Page:"Main",Close:true }
-     Close跳转并关闭当前WebView(如果可以关闭的话)
-
-     navigateBack接口：
-     如果页面是tab列表和preload列表的页面，则保持webview的生命，如果是preload页面既隐藏，返回显示上一个页面，如果是tab页面就不用做动作，因为伊已经是顶层
-
-     build.json preload元素，但不存在
-     "preload":["Main","My","Login","Cart"]
-     进入【主界面】后，加载【启动页】后，后台线程根据preload创建对应webview并且隐藏
-
      * @param activity activity
      */
     public static void startMainActivity(Activity activity) {
@@ -133,10 +148,5 @@ public class MainActivity extends BaseActivity implements MyNavigationView.OnTab
 //        activity.overridePendingTransition(R.anim.stand,R.anim.splash);
         activity.startActivity(intent);
         activity.finish();
-    }
-
-    @Override
-    public void onTabClick(View v, int index) {
-        mMyWebViews.showView(index);
     }
 }

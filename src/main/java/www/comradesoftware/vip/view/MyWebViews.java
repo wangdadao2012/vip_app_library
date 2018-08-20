@@ -50,7 +50,6 @@ public class MyWebViews extends FrameLayout {
     }
 
     //设置数量
-    @SuppressLint("SetJavaScriptEnabled")
     private void addWabView() {
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
         List<TabList> tabs = DataSupport.findAll(TabList.class);
@@ -62,32 +61,31 @@ public class MyWebViews extends FrameLayout {
             webView.setWebChromeClient(new WebChromeClient());
             WebSettings settings = webView.getSettings();
             settings.setJavaScriptEnabled(true);//设置js可用(必要)
+            settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
             settings.setAllowFileAccess(true);// 设置允许访问文件数据(必要)
             settings.setSupportZoom(true);//支持放大网页功能
             settings.setBuiltInZoomControls(true);//支持缩小网页
-            webView.addJavascriptObject(new JsApi(context), null);
-            DWebView.setWebContentsDebuggingEnabled(true);
+            webView.addJavascriptObject(new JsApi(context),null);
 
             addView(webView);
             mWebViewList.add(webView);
 
-//           方式一：webview.loadUrl
+//           方式一：（绝对路径）webview.loadUrl
 //           获得js和css的所在文件夹
-//            String filePathName= "file://"+FileUtils.ACUDATA_PATH(context)+"/page/"+tabs.get(i).getPage().toLowerCase()+"/index.htm";
-////            webView.loadUrl(filePathName);
+            String filePathName= "file://"+FileUtils.ACUDATA_PATH(context)+"/page/"+tabs.get(i).getPage().toLowerCase()+"/index.htm";
+            webView.loadUrl(filePathName);
 
-            //方式二：webView.loadDataBaseURL，如果用此方法必须去InitDataService的analysisDefaultJson方法里也得改用方式二拼接路径
-            String contentPath = "file://" + FileUtils.ACUDATA_PATH(context) + "/content/";
-            try {
-                webView.loadDataWithBaseURL(contentPath
-                        , getHtmlContent(tabs.get(i).getPage())
-//                        ,filePathName
-                        , "text/html"
-                        , "UTF-8"
-                        , "");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            方式二：（相对路径）webView.loadDataBaseURL，如果用此方法必须去InitDataService的analysisDefaultJson方法里也得改用方式二拼接路径
+//            String contentPath = "file://" + FileUtils.ACUDATA_PATH(context) + "/content/";
+//            try {
+//                webView.loadDataWithBaseURL(contentPath
+//                        , getHtmlContent(tabs.get(i).getPage())
+//                        , "text/html"
+//                        , "UTF-8"
+//                        , "");
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
             webView.setVisibility(INVISIBLE);
         }
     }

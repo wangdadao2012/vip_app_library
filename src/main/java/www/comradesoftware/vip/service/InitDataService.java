@@ -191,56 +191,70 @@ public class InitDataService extends Service {
                     }.getType());
 //            获得js和css的所在文件夹
             String contentPath = FileUtils.ACUDATA_PATH(this) + "/content/";
-            //用于拼接载入aHtmlTags列表里的js和css的html代码
+            //StringBuilder用于拼接路径，载入aHtmlTags列表里的js和css的html代码
             StringBuilder tagSB = new StringBuilder();
 //            先清空表
             DataSupport.deleteAll(HtmlTags.class);
+
             for (String aHtmlTags : htmlTagStres) {
 //              把名称写入表
                 if (aHtmlTags == null)
-                    return;
+                    continue;
                 HtmlTags htmlTags = new HtmlTags();
                 htmlTags.setTag(aHtmlTags);
                 htmlTags.save();
+            }
 
+            for (String aHtmlTags : htmlTagStres) {
                 //如果字符串末端两个字符包含js,说明是js文件，否则css，据此拼接html代码，更改方式的话MyWebView里的addWabView方法必须也得改方式
-                //方式一：webView.loadUrl
-//                if (aHtmlTags.substring(aHtmlTags.length()-2,aHtmlTags.length()).contains("js")){
-//                    tagSB.append("<script src=\"").append("file://").append(contentPath).append(aHtmlTags).append("\"></script>").append("\n");
-//                }else {
-//                    tagSB.append("<link href=\"").append("file://").append(contentPath).append(aHtmlTags).append("\" rel=\"stylesheet\">").append("\n");
-//                }
-
-//                方式二：webView.loadDataBaseURL
-                if (aHtmlTags.substring(aHtmlTags.length() - 2, aHtmlTags.length()).contains("js")) {
-                    tagSB.append("<script src=\"").append("file://").append(aHtmlTags).append("\"></script>").append("\n");
-                } else {
-                    tagSB.append("<link href=\"").append("file://").append(aHtmlTags).append("\" rel=\"stylesheet\">").append("\n");
+                //方式一：（绝对路径）webView.loadUrl
+                if (aHtmlTags.substring(aHtmlTags.length()-2,aHtmlTags.length()).contains("js")){
+                    tagSB.append("<script src=\"").append("file://").append(contentPath).append(aHtmlTags).append("\"></script>\n");
+                }else {
+                    tagSB.append("<link href=\"").append("file://").append(contentPath).append(aHtmlTags).append("\" rel=\"stylesheet\">\n");
                 }
+
+//                方式二：（相对路径）webView.loadDataBaseURL
+//                if (aHtmlTags.substring(aHtmlTags.length() - 2, aHtmlTags.length()).contains("js")) {
+//                    tagSB.append("<script src=\"").append(aHtmlTags).append("\"></script>\n");
+//                } else {
+//                    tagSB.append("<link href=\"").append(aHtmlTags).append("\" rel=\"stylesheet\">\n");
+//                }
             }
 
             //循环把js、css样式写入各个HTML
-            int pageSize = pages.size();
-            for (int i = 0; i < pageSize; i++) {
-                if (pages.get(i) != null) {
-                    //获得要编辑的html文件的路径
-                    String filePathName = FileUtils.ACUDATA_PATH(this) + "/page/" + pages.get(i).getPage().toLowerCase() + "/index.htm";
-                    //先读取到html文件的全部内容
-                    StringBuilder htmlContent = getHtmlContent(filePathName);
-                    //找到内容末尾最后出现"<"的index，借此找出<\html>之前的index
-                    int index = htmlContent.lastIndexOf("<");
-                    htmlContent.insert(index - 1, tagSB.toString());
-                    //写入编辑好的内容
-                    FileOutputStream fos = new FileOutputStream(filePathName);
-                    fos.write(htmlContent.toString().getBytes());
-                    fos.close();
-                }
-            }
+            writeCssJsToHtml(pages,tagSB);
+
         } catch (JSONException | IOException e) {
             e.printStackTrace();
             LogUtil.e("InitDataService", "解析出错了：" + e.getMessage());
         }
     }
+
+    private void saveData(){
+
+    }
+
+    //循环把js、css样式写入各个HTML
+    private void writeCssJsToHtml(List<Page> pages,StringBuilder tagSB) throws IOException {
+        int pageSize = pages.size();
+        for (int i = 0; i < pageSize; i++) {
+            if (pages.get(i) != null) {
+                //获得要编辑的html文件的路径
+                String filePathName = FileUtils.ACUDATA_PATH(this) + "/page/" + pages.get(i).getPage().toLowerCase() + "/index.htm";
+                //先读取到html文件的全部内容
+                StringBuilder htmlContent = getHtmlContent(filePathName);
+                //找到内容末尾最后出现"<"的index，借此找出<\html>之前的index
+                int index = htmlContent.lastIndexOf("<");
+                htmlContent.insert(index - 1, tagSB.toString());
+                //写入编辑好的内容
+                FileOutputStream fos = new FileOutputStream(filePathName);
+                fos.write(htmlContent.toString().getBytes());
+                fos.close();
+            }
+        }
+    }
+
 
     private StringBuilder getHtmlContent(String filePathName) throws IOException {
         FileInputStream fis = new FileInputStream(filePathName);

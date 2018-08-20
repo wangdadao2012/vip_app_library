@@ -3,8 +3,4 @@
     <string name="title_home">首页</string>
     <string name="title_shop_cart">购物车</string>
     <string name="title_user">我的</string>
-
-    <string name="action_edit">编辑</string>
-    <string name="action_settings">设置</string>
-    <string name="action_share">分享</string>
 </resources>

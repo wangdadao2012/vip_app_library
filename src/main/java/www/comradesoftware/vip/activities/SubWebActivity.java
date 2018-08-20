@@ -145,6 +145,6 @@ public class SubWebActivity extends BaseActivity implements MyToolbar.OnItemClic
         intent.putExtras(data);
 //        activity.overridePendingTransition(R.anim.stand,R.anim.splash);
         activity.startActivity(intent);
-        activity.finish();
+//        activity.finish();
     }
 }

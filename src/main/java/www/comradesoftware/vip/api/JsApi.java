@@ -16,6 +16,7 @@ import java.util.Map;
 
 import wendu.dsbridge.CompletionHandler;
 import www.comradesoftware.vip.Global;
+import www.comradesoftware.vip.activities.MainActivity;
 import www.comradesoftware.vip.activities.SubWebActivity;
 import www.comradesoftware.vip.utils.ApkInfoUtil;
 import www.comradesoftware.vip.utils.LogUtil;
@@ -33,20 +34,17 @@ public class JsApi {
     public JsApi(Context context){
         this.context=context;
     }
-
-    //同步
-    @JavascriptInterface
-    public String testSyn(Object msg)  {
-        return msg + "［syn call］";
-    }
-
-    //异步回调
-    @JavascriptInterface
-    public void testAsyn(Object msg, CompletionHandler<String> handler){
-        handler.complete(msg+" [ asyn call]");
-    }
-
-
+//    //同步
+//    @JavascriptInterface
+//    public String testSyn(Object msg)  {
+//        return msg + "［syn call］";
+//    }
+//
+//    //异步回调
+//    @JavascriptInterface
+//    public void testAsyn(Object msg, CompletionHandler<String> handler){
+//        handler.complete(msg+" [ asyn call]");
+//    }
     /**
      * 外部地址,打开二层视图 App.redirectTo({ Url: "http://www.baidu.com" });
      * 参数：{ Url: "http://www.baidu.com"}
@@ -68,6 +66,14 @@ public class JsApi {
      */
     @JavascriptInterface
     public void navigateTo(Object msg, CompletionHandler<String> handler){
+        try {
+            JSONObject jsonObject=new JSONObject(msg.toString());
+            String page=jsonObject.getString("Page");
+            boolean close=jsonObject.getBoolean("Close");
+            ((MainActivity)context).setPreloadViewPageTo(page,close);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         handler.complete();
     }
 

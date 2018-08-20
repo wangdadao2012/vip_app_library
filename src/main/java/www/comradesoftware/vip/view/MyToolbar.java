@@ -60,6 +60,7 @@ public class MyToolbar extends RelativeLayout implements View.OnClickListener {
             textView.setTextSize(16);
             textView.getPaint().setFakeBoldText(true);//加粗
             textView.setOnClickListener(this);
+            textView.setTextColor(getResources().getColor(android.R.color.white));
             addView(textView);
             textViewList.add(textView);
         }

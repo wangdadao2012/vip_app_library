@@ -1,6 +1,7 @@
 package www.comradesoftware.vip.view;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.TextView;
@@ -8,13 +9,16 @@ import android.widget.TextView;
 public class IcTextView extends android.support.v7.widget.AppCompatTextView {
     public IcTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/app.ttf");
-        setTypeface(typeface);
+        init(context);
     }
 
     public IcTextView(Context context) {
         super(context, null);
-        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/app.ttf");
+        init(context);
+    }
+
+    private void init(Context context){
+        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/iconfont.woff");
         setTypeface(typeface);
     }
 }
