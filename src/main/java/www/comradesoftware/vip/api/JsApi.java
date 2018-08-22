@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.webkit.JavascriptInterface;
 
 import com.okhttplib.HttpInfo;
@@ -53,6 +54,7 @@ public class JsApi {
      */
     @JavascriptInterface
     public void redirectTo(Object msg, CompletionHandler<String> handler){
+        ToastUtil.showToast(context,"redirectTo");
         Bundle data=new Bundle();
         data.putString("URL",msg.toString());
         SubWebActivity.startSubWebActivity((Activity) context,data);
@@ -66,6 +68,7 @@ public class JsApi {
      */
     @JavascriptInterface
     public void navigateTo(Object msg, CompletionHandler<String> handler){
+        ToastUtil.showToast(context,"navigateTo");
         try {
             JSONObject jsonObject=new JSONObject(msg.toString());
             String page=jsonObject.getString("Page");
@@ -83,6 +86,8 @@ public class JsApi {
      */
     @JavascriptInterface
     public void navigateBack(Object msg, CompletionHandler<String> handler){
+        ToastUtil.showToast(context,"navigateBack");
+        ((MainActivity)context).setPreloadViewPageBack();
         handler.complete();
     }
 
@@ -92,6 +97,7 @@ public class JsApi {
      */
     @JavascriptInterface
     public void getSystemInfo(Object msg, CompletionHandler<String> handler){
+        ToastUtil.showToast(context,"getSystemInfo");
         handler.complete(ApkInfoUtil.getSysInfo(context));
     }
 

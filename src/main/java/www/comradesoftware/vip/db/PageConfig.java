@@ -1,8 +1,9 @@
 package www.comradesoftware.vip.db;
 
 import org.litepal.crud.DataSupport;
+import org.litepal.crud.LitePalSupport;
 
-public class PageConfig extends DataSupport {
+public class PageConfig extends LitePalSupport {
     private int id;
     private String Type;
     private String Value;

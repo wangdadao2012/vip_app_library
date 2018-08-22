@@ -1,10 +1,11 @@
 package www.comradesoftware.vip.db;
 
 import org.litepal.crud.DataSupport;
+import org.litepal.crud.LitePalSupport;
 
 import java.util.List;
 
-public class GlobalConfig extends DataSupport {
+public class GlobalConfig extends LitePalSupport {
     private int id;
     private String Name;
     private String Value;

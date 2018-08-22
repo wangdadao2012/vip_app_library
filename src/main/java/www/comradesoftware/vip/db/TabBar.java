@@ -1,10 +1,11 @@
 package www.comradesoftware.vip.db;
 
 import org.litepal.crud.DataSupport;
+import org.litepal.crud.LitePalSupport;
 
 import java.util.List;
 
-public class TabBar extends DataSupport {
+public class TabBar extends LitePalSupport {
     private String color;
     private String selectColor;
     private String position;

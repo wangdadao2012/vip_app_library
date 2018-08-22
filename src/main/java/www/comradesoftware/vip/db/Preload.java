@@ -1,8 +1,9 @@
 package www.comradesoftware.vip.db;
 
 import org.litepal.crud.DataSupport;
+import org.litepal.crud.LitePalSupport;
 
-public class Preload extends DataSupport {
+public class Preload extends LitePalSupport {
     private String value;
 
     @Override

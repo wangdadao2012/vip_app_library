@@ -7,6 +7,8 @@ import android.support.v4.view.PagerAdapter;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+
+import org.litepal.LitePal;
 import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
@@ -18,7 +20,7 @@ import www.comradesoftware.vip.db.Preload;
 import www.comradesoftware.vip.utils.LogUtil;
 
 public class PreloadWbViewPage extends NoScrollViewPager {
-    private List<Preload> mPreloads = DataSupport.findAll(Preload.class);
+    private List<Preload> mPreloads = LitePal.findAll(Preload.class);
     private Context context;
     private List<String> pageZ=new ArrayList<>();
 

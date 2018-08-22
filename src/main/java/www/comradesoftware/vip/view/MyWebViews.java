@@ -10,7 +10,7 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 
 import org.apache.http.util.EncodingUtils;
-import org.litepal.crud.DataSupport;
+import org.litepal.LitePal;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -52,20 +52,19 @@ public class MyWebViews extends FrameLayout {
     //设置数量
     private void addWabView() {
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
-        List<TabList> tabs = DataSupport.findAll(TabList.class);
+        List<TabList> tabs = LitePal.findAll(TabList.class);
         int size = tabs.size();
         for (int i = 0; i < size; i++) {
             DWebView webView = new DWebView(context);
             webView.setLayoutParams(params);
-            webView.setWebViewClient(new WebViewClient());
-            webView.setWebChromeClient(new WebChromeClient());
-            WebSettings settings = webView.getSettings();
+            webView.setWebViewClient(new com.tencent.smtt.sdk.WebViewClient());
+            webView.setWebChromeClient(new com.tencent.smtt.sdk.WebChromeClient());
+            com.tencent.smtt.sdk.WebSettings settings = webView.getSettings();
             settings.setJavaScriptEnabled(true);//设置js可用(必要)
-            settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
             settings.setAllowFileAccess(true);// 设置允许访问文件数据(必要)
             settings.setSupportZoom(true);//支持放大网页功能
             settings.setBuiltInZoomControls(true);//支持缩小网页
-            webView.addJavascriptObject(new JsApi(context),null);
+            webView.addJavascriptObject(new JsApi(context),"_dsb");
 
             addView(webView);
             mWebViewList.add(webView);
@@ -91,8 +90,8 @@ public class MyWebViews extends FrameLayout {
     }
 
     public int getLaunchIndex() {
-        List<TabList> tabs = DataSupport.findAll(TabList.class);
-        GlobalConfig globalConfig = DataSupport.findLast(GlobalConfig.class);
+        List<TabList> tabs = LitePal.findAll(TabList.class);
+        GlobalConfig globalConfig = LitePal.findLast(GlobalConfig.class);
         int size = tabs.size();
         for (int i = 0; i < size; i++) {
             if (tabs.get(i).getPage().equals(globalConfig.getLaunchPage())) {

@@ -43,30 +43,43 @@ public class SubWebActivity extends BaseActivity implements MyToolbar.OnItemClic
         progressBar=findViewById(R.id.progressBar);
 
         mDWebView =findViewById(R.id.dWebView);
-        mDWebView.setWebChromeClient(new WebChromeClient(){
+
+        mDWebView.setWebChromeClient(new com.tencent.smtt.sdk.WebChromeClient(){
             @Override
-            public void onProgressChanged(WebView view, int newProgress) {
-                showProgress(newProgress);
+            public void onProgressChanged(com.tencent.smtt.sdk.WebView webView, int i) {
+                super.onProgressChanged(webView, i);
+                showProgress(i);
             }
         });
 
-        mDWebView.setWebViewClient(new WebViewClient(){
+        mDWebView.setWebViewClient(new com.tencent.smtt.sdk.WebViewClient(){
             @Override
-            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-                super.onReceivedError(view, request, error);
+            public void onReceivedError(com.tencent.smtt.sdk.WebView webView, int i, String s, String s1) {
+                super.onReceivedError(webView, i, s, s1);
                 //用javascript隐藏系统定义的404页面信息
                 String data = "页面未找到！";
-                view.loadUrl("javascript:document.body.innerHTML=\"" + data + "\"");
+                webView.loadUrl("javascript:document.body.innerHTML=\"" + data + "\"");
             }
 
             @Override
-            public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
-                super.onReceivedHttpError(view, request, errorResponse);
+            public void onReceivedError(com.tencent.smtt.sdk.WebView webView, com.tencent.smtt.export.external.interfaces.WebResourceRequest webResourceRequest, com.tencent.smtt.export.external.interfaces.WebResourceError webResourceError) {
+                super.onReceivedError(webView, webResourceRequest, webResourceError);
+                //用javascript隐藏系统定义的404页面信息
+                String data = "页面未找到！";
+                webView.loadUrl("javascript:document.body.innerHTML=\"" + data + "\"");
+            }
+
+            @Override
+            public void onReceivedHttpError(com.tencent.smtt.sdk.WebView webView, com.tencent.smtt.export.external.interfaces.WebResourceRequest webResourceRequest, com.tencent.smtt.export.external.interfaces.WebResourceResponse webResourceResponse) {
+                super.onReceivedHttpError(webView, webResourceRequest, webResourceResponse);
+                //用javascript隐藏系统定义的404页面信息
+                String data = "页面未找到！";
+                webView.loadUrl("javascript:document.body.innerHTML=\"" + data + "\"");
             }
         });
 
         mDWebView.loadUrl(getUrl());
-        WebSettings settings = mDWebView.getSettings();
+        com.tencent.smtt.sdk.WebSettings settings = mDWebView.getSettings();
         settings.setJavaScriptEnabled(true);//设置js可用(必要)
         settings.setAllowFileAccess(true);// 设置允许访问文件数据(必要)
         settings.setSupportZoom(true);//支持放大网页功能

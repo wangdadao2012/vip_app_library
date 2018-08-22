@@ -18,7 +18,7 @@ public class IcTextView extends android.support.v7.widget.AppCompatTextView {
     }
 
     private void init(Context context){
-        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/iconfont.woff");
+        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/app.ttf");
         setTypeface(typeface);
     }
 }

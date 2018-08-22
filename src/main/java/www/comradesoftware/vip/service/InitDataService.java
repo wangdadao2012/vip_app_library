@@ -33,7 +33,7 @@ import www.comradesoftware.vip.utils.zip.ZipProgressUtil;
 import org.apache.http.util.EncodingUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.litepal.crud.DataSupport;
+import org.litepal.LitePal;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -85,7 +85,7 @@ public class InitDataService extends Service {
 
     //根据更新记录返回md5的值
     private String getMd5() {
-        List<DataDownload> dataDownloads = DataSupport.findAll(DataDownload.class);
+        List<DataDownload> dataDownloads = LitePal.findAll(DataDownload.class);
         if (dataDownloads.size() > 0) {
             //检测数据库更新记录，Upgrade=1更新成功，0失败
             if (dataDownloads.get(dataDownloads.size() - 1).getUpgrade() == 1) {
@@ -131,25 +131,27 @@ public class InitDataService extends Service {
             List<Page> pages = new Gson().fromJson(object.getString("page")
                     , new TypeToken<List<Page>>() {
                     }.getType());
-            DataSupport.deleteAll(Page.class);
+            LitePal.deleteAll(Page.class);
             for (Page page : pages) {
                 if (page != null)
                     page.save();
             }
 
-            List<String> preloads = new Gson().fromJson(object.getString("preload")
-                    , new TypeToken<List<String>>() {
-                    }.getType());
-            DataSupport.deleteAll(Preload.class);
-            for (String preload : preloads) {
-                if (preload != null){
-                    Preload p=new Preload();
-                    p.setValue(preload);
-                    p.save();
+            if (object.has("preload")){
+                List<String> preloads = new Gson().fromJson(object.getString("preload")
+                        , new TypeToken<List<String>>() {
+                        }.getType());
+                LitePal.deleteAll(Preload.class);
+                for (String preload : preloads) {
+                    if (preload != null){
+                        Preload p=new Preload();
+                        p.setValue(preload);
+                        p.save();
+                    }
                 }
             }
 
-            DataSupport.deleteAll(GlobalConfig.class);
+            LitePal.deleteAll(GlobalConfig.class);
             GlobalConfig globalConfig = new GlobalConfig();
             globalConfig.setVersion(object.getString("version"));
             globalConfig.setLaunchPage(object.getString("launchPage"));
@@ -162,13 +164,13 @@ public class InitDataService extends Service {
             List<TabList> tabLists = new Gson().fromJson(tabBarObject.getString("list")
                     , new TypeToken<List<TabList>>() {
                     }.getType());
-            DataSupport.deleteAll(TabList.class);
+            LitePal.deleteAll(TabList.class);
             for (TabList tab : tabLists) {
                 if (tab != null)
                     tab.save();
             }
 
-            DataSupport.deleteAll(TabBar.class);
+            LitePal.deleteAll(TabBar.class);
             TabBar tabBar = new TabBar();
             tabBar.setColor(tabBarObject.getString("color"));
             tabBar.setSelectColor(tabBarObject.getString("selectedColor"));
@@ -176,7 +178,7 @@ public class InitDataService extends Service {
             tabBar.setTabLists(tabLists);
             tabBar.save();
 
-            DataSupport.deleteAll(PageConfig.class);
+            LitePal.deleteAll(PageConfig.class);
             PageConfig pageConfig = new PageConfig();
             //navigationBar
             JSONObject navigationBarObject = new JSONObject(object.getString("navigationBar"));
@@ -185,34 +187,37 @@ public class InitDataService extends Service {
             pageConfig.setTabBar(tabBar);
             pageConfig.save();
 
-//            获得js和css名称（包括后缀）
-            String[] htmlTagStres = new Gson().fromJson(object.getString("html_tags")
-                    , new TypeToken<String[]>() {
-                    }.getType());
+            if (object.has("html_tags")){
+                //            获得js和css名称（包括后缀）
+                String[] htmlTagStres = new Gson().fromJson(object.getString("html_tags")
+                        , new TypeToken<String[]>() {
+                        }.getType());
 //            获得js和css的所在文件夹
-            String contentPath = FileUtils.ACUDATA_PATH(this) + "/content/";
-            //StringBuilder用于拼接路径，载入aHtmlTags列表里的js和css的html代码
-            StringBuilder tagSB = new StringBuilder();
+                String contentPath = FileUtils.ACUDATA_PATH(this) + "/content/";
+                //StringBuilder用于拼接路径，载入aHtmlTags列表里的js和css的html代码
+                StringBuilder tagSB = new StringBuilder();
 //            先清空表
-            DataSupport.deleteAll(HtmlTags.class);
+                LitePal.deleteAll(HtmlTags.class);
 
-            for (String aHtmlTags : htmlTagStres) {
+                for (String aHtmlTags : htmlTagStres) {
 //              把名称写入表
-                if (aHtmlTags == null)
-                    continue;
-                HtmlTags htmlTags = new HtmlTags();
-                htmlTags.setTag(aHtmlTags);
-                htmlTags.save();
-            }
-
-            for (String aHtmlTags : htmlTagStres) {
-                //如果字符串末端两个字符包含js,说明是js文件，否则css，据此拼接html代码，更改方式的话MyWebView里的addWabView方法必须也得改方式
-                //方式一：（绝对路径）webView.loadUrl
-                if (aHtmlTags.substring(aHtmlTags.length()-2,aHtmlTags.length()).contains("js")){
-                    tagSB.append("<script src=\"").append("file://").append(contentPath).append(aHtmlTags).append("\"></script>\n");
-                }else {
-                    tagSB.append("<link href=\"").append("file://").append(contentPath).append(aHtmlTags).append("\" rel=\"stylesheet\">\n");
+                    if (aHtmlTags == null)
+                        continue;
+                    HtmlTags htmlTags = new HtmlTags();
+                    htmlTags.setTag(aHtmlTags);
+                    htmlTags.save();
                 }
+
+                for (String aHtmlTags : htmlTagStres) {
+                    if (aHtmlTags == null)
+                        continue;
+                    //如果字符串末端两个字符包含js,说明是js文件，否则css，据此拼接html代码，更改方式的话MyWebView里的addWabView方法必须也得改方式
+                    //方式一：（绝对路径）webView.loadUrl
+                    if (aHtmlTags.substring(aHtmlTags.length()-2,aHtmlTags.length()).contains("js")){
+                        tagSB.append("<script type=\"text/javascript\" src=\"").append("file://").append(contentPath).append(aHtmlTags).append("\"></script>\n");
+                    }else {
+                        tagSB.append("<link href=\"").append("file://").append(contentPath).append(aHtmlTags).append("\" rel=\"stylesheet\">\n");
+                    }
 
 //                方式二：（相对路径）webView.loadDataBaseURL
 //                if (aHtmlTags.substring(aHtmlTags.length() - 2, aHtmlTags.length()).contains("js")) {
@@ -220,19 +225,16 @@ public class InitDataService extends Service {
 //                } else {
 //                    tagSB.append("<link href=\"").append(aHtmlTags).append("\" rel=\"stylesheet\">\n");
 //                }
-            }
+                }
 
-            //循环把js、css样式写入各个HTML
-            writeCssJsToHtml(pages,tagSB);
+                //循环把js、css样式写入各个HTML
+                writeCssJsToHtml(pages,tagSB);
+            }
 
         } catch (JSONException | IOException e) {
             e.printStackTrace();
             LogUtil.e("InitDataService", "解析出错了：" + e.getMessage());
         }
-    }
-
-    private void saveData(){
-
     }
 
     //循环把js、css样式写入各个HTML
@@ -297,7 +299,7 @@ public class InitDataService extends Service {
     private void requestUpdateInfo(final String MD5) {
 
         sendBroadcast("检查数据", RandomUntil.getNum(11, 100));
-        Map<String, String> map = new LinkedHashMap<String, String>();
+        Map<String, String> map = new LinkedHashMap<>();
         map.put("MD5", MD5);
         if (httpHelp == null)
             httpHelp = new HttpHelp(this);
@@ -334,7 +336,7 @@ public class InitDataService extends Service {
                         //url不为空则有更新包
                         if (!TextUtils.isEmpty(url)) {
                             //清空DataDownLoad表
-                            DataSupport.deleteAll(DataDownload.class);
+                            LitePal.deleteAll(DataDownload.class);
                             //把更新数据写入数据库
                             DataDownload dataDownload = new DataDownload();
                             dataDownload.setId(1);
@@ -448,7 +450,7 @@ public class InitDataService extends Service {
         FileUtils.deleteDirectory(FileUtils.getACUDATAbakPath(this));
         FileUtils.deleteDirectory(FileUtils.ACUDATA_PATH(this));
         FileUtils.deleteDirectory(FileUtils.getDownloadPath(this));
-        DataSupport.deleteAll(DataDownload.class);
+        LitePal.deleteAll(DataDownload.class);
         SharedTool.putString(this, "unZipDefaultData", "0");
         sendBroadcast("START_ACTIVITY", -1);
 

@@ -9,6 +9,9 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
+        }
 
     }
 
@@ -37,8 +40,8 @@ dependencies {
     implementation 'com.tencent.tac:tac-core:1.1.2'
     implementation 'com.tencent.tac:tac-messaging:1.1.2'
 //    DSBridge for X5
-    implementation 'com.github.wendux:DSBridge-Android:master-SNAPSHOT'
-//    implementation 'com.github.wendux:DSBridge-Android:x5-3.0-SNAPSHOT'
+//    api 'com.github.wendux:DSBridge-Android:master-SNAPSHOT'
+    api 'com.github.wendux:DSBridge-Android:x5-3.0-SNAPSHOT'
 //  网络框架
     implementation('com.zhousf.lib:okhttp3:2.9.5.2') {
         exclude(module: 'gson')
@@ -50,4 +53,6 @@ dependencies {
     implementation 'com.android.support:design:27.1.1'
 
     implementation 'com.android.support:percent:27.1.1'
+
+    implementation 'org.litepal.android:core:2.0.0'
 }

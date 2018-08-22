@@ -1,8 +1,9 @@
 package www.comradesoftware.vip.db;
 
 import org.litepal.crud.DataSupport;
+import org.litepal.crud.LitePalSupport;
 
-public class TabList extends DataSupport{
+public class TabList extends LitePalSupport {
     private String page;
     private String iconXe;
     private String text;

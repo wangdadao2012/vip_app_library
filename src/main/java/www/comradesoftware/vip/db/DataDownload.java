@@ -1,10 +1,11 @@
 package www.comradesoftware.vip.db;
 
 import org.litepal.crud.DataSupport;
+import org.litepal.crud.LitePalSupport;
 
 import java.sql.Date;
 
-public class DataDownload extends DataSupport {
+public class DataDownload extends LitePalSupport {
     private int id;
     private Date CreateTime;
     private int Downloaded;//1:下载成功

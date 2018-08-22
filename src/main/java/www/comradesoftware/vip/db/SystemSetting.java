@@ -1,8 +1,9 @@
 package www.comradesoftware.vip.db;
 
 import org.litepal.crud.DataSupport;
+import org.litepal.crud.LitePalSupport;
 
-public class SystemSetting extends DataSupport {
+public class SystemSetting extends LitePalSupport {
     private int id;
     private String Name;
     private String Value;

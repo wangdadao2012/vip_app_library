@@ -8,14 +8,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.litepal.crud.DataSupport;
+import org.litepal.LitePal;
+import org.litepal.crud.LitePalSupport;
 
 import java.util.List;
 
 import www.comradesoftware.vip.R;
-import www.comradesoftware.vip.api.JsApi;
 import www.comradesoftware.vip.db.PageConfig;
 import www.comradesoftware.vip.db.TabBar;
 import www.comradesoftware.vip.db.TabList;
@@ -65,10 +63,9 @@ public class MainActivity extends BaseActivity implements MyNavigationView.OnTab
         //菜单点击事件（注意需要在setSupportActionBar(toolbar)之后才有效果）
         toolbar.setOnMenuItemClickListener(onMenuItemClick);
 
-        PageConfig pageConfig = DataSupport.findLast(PageConfig.class);
-        TabBar tabBar = DataSupport.findLast(TabBar.class);
-        List<TabList> tabList = DataSupport.findAll(TabList.class);
-
+        PageConfig pageConfig = LitePal.findLast(PageConfig.class);
+        TabBar tabBar = LitePal.findLast(TabBar.class);
+        List<TabList> tabList = LitePal.findAll(TabList.class);
 
         int[] iconXe =new int[]{607,608,609};
         int i=0;
@@ -133,6 +130,10 @@ public class MainActivity extends BaseActivity implements MyNavigationView.OnTab
 
     public void setPreloadViewPageTo(String page,boolean close){
         mPreloadViewPage.setPreloadViewPageTo(page,close);
+    }
+
+    public void setPreloadViewPageBack(){
+        mPreloadViewPage.setPreloadViewPageBack();
     }
 
     public void setMyWebViewsVisibility(int visibility){
